@@ -3,9 +3,10 @@
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
+  text-decoration: none;
 }
 
-:root{
+:root {
   --highlight: #FF57B2;
   --heading: #F8F8F8;
   --bg: #1A1D23;
@@ -13,6 +14,6 @@
   --body: #D7D7D7;
 }
 
-body{
+body {
   background-color: var(--bg);
 }

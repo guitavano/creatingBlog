@@ -1,17 +1,25 @@
-.container{
+.container {
     max-width: 1120px;
     margin: 0 auto;
     padding: 0 2rem;
+
+    span {
+        margin-top: 2rem;
+        color: var(--highlight);
+        font-weight: bold;
+        cursor: pointer;
+    }
 }
 
-.posts{
+.posts {
+    margin-bottom: 2rem;
 
-    a{
+    a {
         display: block;
         text-decoration: none;
         margin-top: 3rem;
-        
-        strong{
+
+        strong {
             display: block;
             font-size: 1.5rem;
             margin: 1rem 0 0.5rem 0;
@@ -21,7 +29,7 @@
             color: var(--heading);
         }
 
-        p{
+        p {
             color: var(--body);
             margin: 0.2rem 0;
         }
@@ -29,11 +37,11 @@
 
 }
 
-.info{
+.info {
     color: var(--info);
     display: flex;
 
-    p{
+    p {
         font-size: 0.8rem;
     }
 

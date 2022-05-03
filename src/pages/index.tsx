@@ -8,6 +8,7 @@ import * as prismic from '@prismicio/client'
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 import Link from 'next/link'
+import { useEffect, useState } from 'react';
 
 interface Post {
   uid?: string;
@@ -29,7 +30,28 @@ interface HomeProps {
 }
 
 export default function Home({ postsResponse }: HomeProps) {
-  console.log(postsResponse)
+  const [posts, setPosts] = useState([])
+  const [nextPage, setNextPage] = useState(postsResponse.next_page)
+
+  useEffect(() => {
+    postsResponse.results.map(post => {
+      setPosts([...posts, post])
+    })
+  }, [])
+
+
+  function addPosts() {
+    fetch(nextPage)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (result) {
+        console.log(result)
+        setPosts([...posts, result.results[0]])
+        setNextPage(result.next_page)
+      })
+  }
+
   return (
     <>
       <Head>
@@ -38,8 +60,8 @@ export default function Home({ postsResponse }: HomeProps) {
       <main className={styles.container}>
         <div className={styles.posts}>
           {
-            postsResponse.results.map(post => (
-              <Link href={`/posts/${post.uid}`} key={post.uid}>
+            posts.map(post => (
+              <Link href={`/post/${post.uid}`} key={post.uid}>
                 <a>
                   <strong>{post.data.title}</strong>
                   <p>{post.data.subtitle}</p>
@@ -56,6 +78,9 @@ export default function Home({ postsResponse }: HomeProps) {
             ))
           }
         </div>
+        {
+          nextPage && <div onClick={() => { addPosts() }}><span>Carregar mais...</span></div>
+        }
       </main>
     </>
   )
@@ -66,7 +91,7 @@ export const getStaticProps = async () => {
 
   const client = prismic.createClient(endpoint)
 
-  const postsResponse = await client.getByType('posts');
+  const postsResponse = await client.getByType('posts', { pageSize: 1, });
 
   console.log(postsResponse)
 
