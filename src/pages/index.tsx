@@ -10,6 +10,10 @@ import styles from './home.module.scss';
 import Link from 'next/link'
 import { useEffect, useState } from 'react';
 
+import { FiUser, FiCalendar } from 'react-icons/fi'
+import { format } from 'date-fns';
+import { pt, ptBR } from 'date-fns/locale';
+
 interface Post {
   uid?: string;
   first_publication_date: string | null;
@@ -26,15 +30,15 @@ interface PostPagination {
 }
 
 interface HomeProps {
-  postsResponse: PostPagination;
+  postsPagination: PostPagination;
 }
 
-export default function Home({ postsResponse }: HomeProps) {
+export default function Home({ postsPagination }: HomeProps) {
   const [posts, setPosts] = useState([])
-  const [nextPage, setNextPage] = useState(postsResponse.next_page)
+  const [nextPage, setNextPage] = useState(postsPagination.next_page)
 
   useEffect(() => {
-    postsResponse.results.map(post => {
+    postsPagination.results.map(post => {
       setPosts([...posts, post])
     })
   }, [])
@@ -46,7 +50,6 @@ export default function Home({ postsResponse }: HomeProps) {
         return response.json();
       })
       .then(function (result) {
-        console.log(result)
         setPosts([...posts, result.results[0]])
         setNextPage(result.next_page)
       })
@@ -67,9 +70,11 @@ export default function Home({ postsResponse }: HomeProps) {
                   <p>{post.data.subtitle}</p>
                   <div className={styles.info}>
                     <div>
-                      <p>{post.first_publication_date}</p>
+                      <FiCalendar />
+                      <p>{format(new Date(post.first_publication_date), "dd MMM uuuu", { locale: ptBR })}</p>
                     </div>
                     <div>
+                      <FiUser />
                       <p>{post.data.author}</p>
                     </div>
                   </div>
@@ -91,13 +96,26 @@ export const getStaticProps = async () => {
 
   const client = prismic.createClient(endpoint)
 
-  const postsResponse = await client.getByType('posts', { pageSize: 1, });
+  const response = await client.getByType('posts', { pageSize: 1, });
 
-  console.log(postsResponse)
+  const postsPagination = {
+    next_page: response.next_page,
+    results: response.results.map(result => {
+      return {
+        uid: result.uid,
+        first_publication_date: result.first_publication_date,
+        data: {
+          title: result.data.title,
+          subtitle: result.data.subtitle,
+          author: result.data.author
+        }
+      }
+    })
+  }
 
   return {
     props: {
-      postsResponse
+      postsPagination
     }
   }
 

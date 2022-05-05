@@ -40,9 +40,18 @@
 .info {
     color: var(--info);
     display: flex;
+    margin-top: 1rem;
 
     p {
         font-size: 0.8rem;
+    }
+
+    div {
+        display: flex;
+    }
+
+    svg {
+        margin: 0 0.5rem;
     }
 
 }

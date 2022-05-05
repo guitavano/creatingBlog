@@ -10,6 +10,10 @@ import styles from './post.module.scss';
 
 import Head from 'next/head'
 
+import { FiUser, FiCalendar } from 'react-icons/fi'
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
 
 interface Post {
   first_publication_date: string | null;
@@ -33,7 +37,6 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
-  console.log(post)
   return (
     <>
       <Head>
@@ -45,9 +48,11 @@ export default function Post({ post }: PostProps) {
           <h1>{post.data.title}</h1>
           <div>
             <div>
-              <p>{post.first_publication_date}</p>
+              <FiCalendar />
+              <p>{format(new Date(post.first_publication_date), "dd MMM uuuu", { locale: ptBR })}</p>
             </div>
             <div>
+              <FiUser />
               <p>{post.data.author}</p>
             </div>
             <div>

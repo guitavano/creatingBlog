@@ -26,4 +26,15 @@
         color: var(--highlight);
     }
 
+    div {
+        div {
+            display: flex;
+            align-items: center;
+
+            svg {
+                margin: 0 0.5rem;
+            }
+        }
+    }
+
 }
